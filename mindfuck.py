@@ -52,6 +52,8 @@ def main():
         interpreter.interpret(code)
     except IOError, chyba:
         print "Cannot read file,",chyba
+    except EOFError:
+        print "EOF catched."
     except IndexError, chyba:
         print "Something goes wrong with some list (maybe stack?)", chyba
     except pyfuk.InterpretationError, chyba:
