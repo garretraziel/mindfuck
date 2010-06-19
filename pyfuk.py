@@ -5,17 +5,6 @@ defines own exception InterpretationError, main class is
 class BrainInterpreter. If you want to use this as a program,
 please run mindfuck.py"""
 
-#TODO: - zkusit, jestli to funguje na vsechno,
-#TODO: - doma pak i na priklady co stahnu z internetu
-#TODO: - spravit mindfuck, vstup z konzole apod
-#TODO: - nahrat na github
-#TODO: - informovat komunitu o pythonovske implementaci bf
-#TODO: - mindfuckTK
-#TODO: - prelozit, predelat pro symbian
-#TODO: - informovat komunitu symbianu
-#TODO: - kniha
-#TODO: - daemon?
-
 import sys
 
 class InterpretationError(Exception):
@@ -47,6 +36,7 @@ class BrainInterpreter():
         self.__loopposition = []
         self.__output = writeFunction
         self.__input = readFunction
+        self.__inputstack = []
         self.__debug = debug
         if debug != 0:
             self.debugstep = 0
@@ -111,14 +101,17 @@ class BrainInterpreter():
         elif char == '.':
             self.__output(chr(self.brainstack[self.__position]))
         elif char == ',':
-            try:
-                bfInput = self.__input("Input: ")
-                if bfInput != '':
-                    self.brainstack[self.__position] = ord(bfInput[0])
-                else:
-                    self.brainstack[self.__position] = 10
-            except EOFError:
-                self.brainstack[self.__position] = 0
+            if self.__inputstack == []:
+                try:
+                    self.__inputstack = list(self.__input("Input: "))
+                    if self.__inputstack[0] != '':
+                        self.brainstack[self.__position] = ord(self.__inputstack.pop(0))
+                    else:
+                        self.brainstack[self.__position] = 10
+                except EOFError:
+                    self.brainstack[self.__position] = 0
+            else:
+                self.brainstack[self.__position] = ord(self.__inputstack.pop(0))
         elif char == '>':
             self.__position = self.__position + 1
             if len(self.brainstack)<(self.__position+1):
