@@ -1,0 +1,12 @@
+mindfuck
+--------
+
+brainfuck interpreter
+written in pyhton, includes pyfuk, python module for
+interpreting brainfuck in python projects
+
+for help run ./mindfuck.py -h
+
+requies python>=2.5 for running
+
+(g) 2010 Garret Raziel
