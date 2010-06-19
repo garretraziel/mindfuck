@@ -111,11 +111,14 @@ class BrainInterpreter():
         elif char == '.':
             self.__output(chr(self.brainstack[self.__position]))
         elif char == ',':
-            bfInput = self.__input("Input: ")
-            if bfInput != '':
-                self.brainstack[self.__position] = ord(bfInput[0])
-            else:
-                self.brainstack[self.__position] = 10
+            try:
+                bfInput = self.__input("Input: ")
+                if bfInput != '':
+                    self.brainstack[self.__position] = ord(bfInput[0])
+                else:
+                    self.brainstack[self.__position] = 10
+            except EOFError:
+                self.brainstack[self.__position] = 0
         elif char == '>':
             self.__position = self.__position + 1
             if len(self.brainstack)<(self.__position+1):
