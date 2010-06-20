@@ -59,7 +59,7 @@ class BrainInterpreter():
                     print "Position in code: ",x+1, ", char is: ",
                     print code[x], ", step is: ", self.debugstep
                 self.debugstep = self.debugstep + 1
-                self.printf()
+                print self
                 raw_input()
             if code[x] == '[':
                 if self.brainstack[self.__position] != 0:
@@ -70,9 +70,9 @@ class BrainInterpreter():
                     countBack = 1
                     while countBack > 0:
                         if code[x] == ']':
-                            countBack = countBack - 1
+                            countBack -= 1
                         elif code[x] == '[':
-                            countBack = countBack + 1
+                            countBack += 1
                         x = x + 1
             elif code[x] == ']':
                 if self.__loopposition != []:
@@ -94,17 +94,17 @@ class BrainInterpreter():
         
         if char == '+':
             if self.brainstack[self.__position] < 255:
-                self.brainstack[self.__position] = self.brainstack[self.__position] + 1
+                self.brainstack[self.__position] += 1
         elif char == '-':
             if self.brainstack[self.__position] > 0:
-                self.brainstack[self.__position] = self.brainstack[self.__position] - 1
+                self.brainstack[self.__position] -= 1
         elif char == '.':
             self.__output(chr(self.brainstack[self.__position]))
         elif char == ',':
             if self.__inputstack == []:
                 try:
                     self.__inputstack = list(self.__input("Input: "))
-                    if self.__inputstack[0] != '':
+                    if self.__inputstack != []:
                         self.brainstack[self.__position] = ord(self.__inputstack.pop(0))
                     else:
                         self.brainstack[self.__position] = 10
@@ -113,25 +113,28 @@ class BrainInterpreter():
             else:
                 self.brainstack[self.__position] = ord(self.__inputstack.pop(0))
         elif char == '>':
-            self.__position = self.__position + 1
+            self.__position += 1
             if len(self.brainstack)<(self.__position+1):
                 self.brainstack.append(0)
         elif char == '<':
             if self.__position == 0:
                 self.brainstack.insert(0,0)
             else:
-                self.__position = self.__position - 1
+                self.__position -= 1
     
-    def printf(self):
+    def __str__(self):
         """printf of BrainIterpreter
         
         if you want to print whole stack (e.g. when debugging)"""
-        
+
+        chain = ""        
+
         for x in range(len(self.brainstack)):
-            print self.brainstack[x],
+            chain += `self.brainstack[x]`+' '
             if self.__position == x:
-                print "<-",
-        print "\n"
+                chain += "<-"
+        chain += "\n"
+        return chain
 
 if __name__ == "__main__":
     print "You must run mindfuck.py module for brainfuck interpreting"
