@@ -2,7 +2,7 @@ mindfuck
 --------
 
 brainfuck interpreter
-written in pyhton, includes pyfuk, python module for
+written in python, includes pyfuk, python module for
 interpreting brainfuck in python projects
 
 for help run ./mindfuck.py -h
