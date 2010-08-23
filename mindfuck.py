@@ -16,10 +16,10 @@ def main():
     file from argument - only frontend for pyfuk
     """
     try:
-        (selection, arguments) = getopt.getopt(sys.argv[1:],'vhd')
+        (selection, arguments) = getopt.getopt(sys.argv[1:],'e:vhd')
         selection = dict(selection)
         if (len(selection) == 0) and (len(arguments) == 0):
-            print sys.argv[0], "[-v|-h|-d] inputfile"
+            print sys.argv[0], "[-v|-h|-d|-e X] inputfile"
             return
         if selection.has_key('-v'):
             print version
@@ -31,10 +31,13 @@ def main():
             print "includes pyfuk python module for direct brainfuck interpreting"
             print "from python projects\n"
             print "Run as:"
-            print sys.argv[0], "[-v|-h|-d] inputfile, where:"
-            print "-v prints version of mindfuck and exists"
-            print "-h prints this help and exists"
+            print sys.argv[0], "[-v|-h|-d|-e X] inputfile, where:"
+            print "-v prints version of mindfuck and exits"
+            print "-h prints this help and exits"
             print "-d if you want to debug your program"
+            print "-e X for some EOF standards - default is that"
+            print "EOF as an input puts 0 - replace X with 1 to"
+            print "EOF leaving block unchanged, 2 to putting -1"
             print "inputfile if path to file with bf code, that you"
             print "want to interpret.\n"
             print "(g) 2010 Garret Raziel, released under GNU/GPL"
@@ -45,8 +48,12 @@ def main():
         if len(arguments) == 0:
             print "No input file!"
             return
+        eof = 0
+        if selection.has_key('-e'):
+            token = int(selection['-e'])
+            eof = token if token in [0,1,2] else 0
         sourcefile = open(arguments[0])
-        interpreter = pyfuk.BrainInterpreter(debug=deb)
+        interpreter = pyfuk.BrainInterpreter(debug=deb,eof=eof)
         code = string.strip(string.join(sourcefile.readlines(),""))
         sourcefile.close()
         interpreter.interpret(code)
@@ -60,6 +67,8 @@ def main():
         print "Cannot interpret,", chyba
     except KeyboardInterrupt:
         print "End of program."
+    except getopt.GetoptError, chyba:
+        print "Bad arguments, ",chyba
     print "\nEnd of interpretation."
 
 if __name__ == '__main__':

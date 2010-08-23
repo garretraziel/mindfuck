@@ -25,7 +25,7 @@ class BrainInterpreter():
     
     reservedWords = ['+','-','.',',','>','<','[',']']
     
-    def __init__(self,writeFunction=sys.stdout.write,readFunction=raw_input,debug=0):
+    def __init__(self,writeFunction=sys.stdout.write,readFunction=raw_input,debug=0,eof=0):
         """Initialization. Takes several arguments.
         writeFunction is standard output - default is sys.stdout.write
         readFunction is standard input - default is raw_input
@@ -38,6 +38,7 @@ class BrainInterpreter():
         self.__input = readFunction
         self.__inputstack = []
         self.__debug = debug
+        self.__eof = eof
         if debug != 0:
             self.debugstep = 0
     
@@ -99,7 +100,10 @@ class BrainInterpreter():
             if self.brainstack[self.__position] > 0:
                 self.brainstack[self.__position] -= 1
         elif char == '.':
-            self.__output(chr(self.brainstack[self.__position]))
+            try:
+                self.__output(chr(self.brainstack[self.__position]))
+            except ValueError:
+                if self.__debug: print "# Cannot print cell with -1" 
         elif char == ',':
             if self.__inputstack == []:
                 try:
@@ -109,7 +113,8 @@ class BrainInterpreter():
                     else:
                         self.brainstack[self.__position] = 10
                 except EOFError:
-                    self.brainstack[self.__position] = 0
+                    self.brainstack[self.__position] = 0 if self.__eof == 0 else -1 if self.__eof\
+                        == 2 else self.brainstack[self.__position]
             else:
                 self.brainstack[self.__position] = ord(self.__inputstack.pop(0))
         elif char == '>':
