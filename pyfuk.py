@@ -25,7 +25,7 @@ class BrainInterpreter():
     
     reservedWords = ['+','-','.',',','>','<','[',']']
     
-    def __init__(self,writeFunction=sys.stdout.write,readFunction=raw_input,debug=0,eof=0):
+    def __init__(self,writeFunction=sys.stdout.write,readFunction=raw_input,debug=0,eof=0,hud=0):
         """Initialization. Takes several arguments.
         writeFunction is standard output - default is sys.stdout.write
         readFunction is standard input - default is raw_input
@@ -39,6 +39,7 @@ class BrainInterpreter():
         self.__inputstack = []
         self.__debug = debug
         self.__eof = eof
+        self.__hud = hud
         if debug != 0:
             self.debugstep = 0
     
@@ -107,7 +108,10 @@ class BrainInterpreter():
         elif char == ',':
             if self.__inputstack == []:
                 try:
-                    self.__inputstack = list(self.__input("Input: "))
+                    if self.__hud:
+                        self.__inputstack = list(self.__input("Input: "))
+                    else:
+                        self.__inputstack = list(self.__input())
                     if self.__inputstack != []:
                         self.brainstack[self.__position] = ord(self.__inputstack.pop(0))
                     else:

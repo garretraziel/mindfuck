@@ -7,7 +7,7 @@ main module, uses pyfuk module for interpretation"""
 import sys, string, getopt
 import pyfuk
 
-version = "0.89"
+version = "1.01"
 
 def main():
     """main(), main mindfuck function
@@ -16,10 +16,10 @@ def main():
     file from argument - only frontend for pyfuk
     """
     try:
-        (selection, arguments) = getopt.getopt(sys.argv[1:],'e:vhd')
+        (selection, arguments) = getopt.getopt(sys.argv[1:],'e:vhdt')
         selection = dict(selection)
         if (len(selection) == 0) and (len(arguments) == 0):
-            print sys.argv[0], "[-v|-h|-d|-e X] inputfile"
+            print sys.argv[0], "[-v|-h|-d|-t|-e X] inputfile"
             return
         if selection.has_key('-v'):
             print version
@@ -31,10 +31,11 @@ def main():
             print "includes pyfuk python module for direct brainfuck interpreting"
             print "from python projects\n"
             print "Run as:"
-            print sys.argv[0], "[-v|-h|-d|-e X] inputfile, where:"
+            print sys.argv[0], "[-v|-h|-d|-t|-e X] inputfile, where:"
             print "-v prints version of mindfuck and exits"
             print "-h prints this help and exits"
             print "-d if you want to debug your program"
+            print "-t if you want to show hud text (End of int., input: etc)"
             print "-e X for some EOF standards - default is that"
             print "EOF as an input puts 0 - replace X with 1 to"
             print "EOF leaving block unchanged, 2 to putting -1"
@@ -52,8 +53,10 @@ def main():
         if selection.has_key('-e'):
             token = int(selection['-e'])
             eof = token if token in [0,1,2] else 0
+        showHud = 0
+        if selection.has_key('-t'): showHud = 1
         sourcefile = open(arguments[0])
-        interpreter = pyfuk.BrainInterpreter(debug=deb,eof=eof)
+        interpreter = pyfuk.BrainInterpreter(debug=deb,eof=eof,hud=showHud)
         code = string.strip(string.join(sourcefile.readlines(),""))
         sourcefile.close()
         interpreter.interpret(code)
@@ -69,7 +72,7 @@ def main():
         print "End of program."
     except getopt.GetoptError, chyba:
         print "Bad arguments, ",chyba
-    print "\nEnd of interpretation."
+    if showHud: print "\nEnd of interpretation."
 
 if __name__ == '__main__':
     try:
