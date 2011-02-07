@@ -15,7 +15,6 @@ def main():
     tries to interpret code that is given from
     file from argument - only frontend for pyfuk
     """
-    showHud = 0 # workaround not to get error undef showHud if exception
     try:
         (selection, arguments) = getopt.getopt(sys.argv[1:],'e:vhdt')
         selection = dict(selection)
@@ -54,6 +53,7 @@ def main():
         if selection.has_key('-e'):
             token = int(selection['-e'])
             eof = token if token in [0,1,2] else 0
+        showHud = 0 # workaround not to get error undef showHud if exception
         if selection.has_key('-t'): showHud = 1
         sourcefile = open(arguments[0])
         interpreter = pyfuk.BrainInterpreter(debug=deb,eof=eof,hud=showHud)
@@ -61,7 +61,7 @@ def main():
         sourcefile.close()
         interpreter.interpret(code)
     except IOError, chyba:
-        print "Cannot read file,",chyba
+        print "Cannot read file,", chyba
     except EOFError:
         print "EOF catched."
     except IndexError, chyba:
@@ -71,8 +71,8 @@ def main():
     except KeyboardInterrupt:
         print "End of program."
     except getopt.GetoptError, chyba:
-        print "Bad arguments, ",chyba
-    if showHud: print "\nEnd of interpretation."
+        print "Bad arguments, ", chyba
+    elif showHud: print "\nEnd of interpretation."
 
 if __name__ == '__main__':
     try:
