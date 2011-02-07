@@ -15,6 +15,7 @@ def main():
     tries to interpret code that is given from
     file from argument - only frontend for pyfuk
     """
+    showHud = 0 # workaround not to get error undef showHud if exception
     try:
         (selection, arguments) = getopt.getopt(sys.argv[1:],'e:vhdt')
         selection = dict(selection)
@@ -53,7 +54,6 @@ def main():
         if selection.has_key('-e'):
             token = int(selection['-e'])
             eof = token if token in [0,1,2] else 0
-        showHud = 0
         if selection.has_key('-t'): showHud = 1
         sourcefile = open(arguments[0])
         interpreter = pyfuk.BrainInterpreter(debug=deb,eof=eof,hud=showHud)
