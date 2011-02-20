@@ -60,6 +60,7 @@ def main():
         code = string.strip(string.join(sourcefile.readlines(),""))
         sourcefile.close()
         interpreter.interpret(code)
+        if showHud: print "\nEnd of interpretation."
     except IOError, chyba:
         print "Cannot read file,", chyba
     except EOFError:
@@ -72,7 +73,6 @@ def main():
         print "End of program."
     except getopt.GetoptError, chyba:
         print "Bad arguments, ", chyba
-    elif showHud: print "\nEnd of interpretation."
 
 if __name__ == '__main__':
     try:
